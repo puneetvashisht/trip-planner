@@ -33,6 +33,11 @@ public class TripController {
         return tripService.getAllTrips();
     }
 
+    @GetMapping("/{tripId}")
+    public Trip getTripById(@PathVariable Long tripId) {
+        return tripService.getTripById(tripId);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createTrip(@RequestBody Trip trip) {

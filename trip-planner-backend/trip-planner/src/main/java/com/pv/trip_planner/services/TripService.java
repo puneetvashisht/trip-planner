@@ -39,4 +39,9 @@ public class TripService {
         tripRepository.save(trip);
     }
 
+    public Trip getTripById(Long tripId) {
+       return tripRepository.findById(tripId)
+       .orElseThrow(() -> new RuntimeException("Trip not found"));
+    }
+
 }

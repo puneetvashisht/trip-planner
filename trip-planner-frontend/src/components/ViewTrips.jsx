@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-
+import { Link } from 'react-router-dom';
 const ViewTrips = () => {
 
     const [trips, setTrips] = useState([]);
@@ -12,7 +12,7 @@ const ViewTrips = () => {
     }, []);
 
     const tripRows = trips.map((trip,i) => <tr key={i}>
-            <td>{trip.title}</td>
+            <td><Link to={`/trip/${trip.id}`}>{trip.title}</Link></td>
             <td>{trip.description}</td>
             <td>{trip.startDate}</td>
             <td>{trip.endDate}</td>

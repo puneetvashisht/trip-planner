@@ -7,6 +7,7 @@ import ViewTrips from './components/ViewTrips.jsx'
 import AddTrip from './components/AddTrip.jsx'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Header from './components/Header.jsx'
+import Trip from './components/Trip.jsx'
 
 createRoot(document.getElementById('root')).render(
   // Router app having 3 routes
@@ -18,6 +19,7 @@ createRoot(document.getElementById('root')).render(
       <Route path="/" element={<Home />} />
       <Route path="/view-trips" element={<ViewTrips />} />
       <Route path="/add-trip" element={<AddTrip />} />
+      <Route path="/trip/:id" element={<Trip />} />
     </Routes>
   </BrowserRouter>
   </>

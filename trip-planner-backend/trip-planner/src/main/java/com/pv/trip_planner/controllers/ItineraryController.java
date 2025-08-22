@@ -10,6 +10,8 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import com.pv.trip_planner.entities.Activity;
 import com.pv.trip_planner.entities.ItineraryItem;
 import com.pv.trip_planner.services.ItineraryService;
 
@@ -34,6 +36,12 @@ public class ItineraryController {
     @PatchMapping("/{id}")
     public void updateItineraryItem(@PathVariable Long id, @RequestBody ItineraryItem itineraryItem) {
         itineraryService.updateItineraryItem(id, itineraryItem);
+    }
+
+    // add activity to itinerary item
+    @PostMapping("/{id}/activities")
+    public void addActivityToItineraryItem(@PathVariable Long id, @RequestBody Activity activity) {
+        itineraryService.addActivityToItineraryItem(id, activity);
     }
 
     // delete itinerary item

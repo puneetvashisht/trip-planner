@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pv.trip_planner.entities.Activity;
 import com.pv.trip_planner.entities.ItineraryItem;
 import com.pv.trip_planner.repositories.ItineraryRepository;
 
@@ -34,6 +35,15 @@ public class ItineraryService {
         existingItem.setLocation(itineraryItem.getLocation());
 
         itineraryRepository.save(existingItem);
+    }
+
+    public void addActivityToItineraryItem(Long id, Activity activity) {
+        ItineraryItem existingItineraryItem  = itineraryRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Itinerary item not found"));
+
+        existingItineraryItem.getActivities().add(activity);
+
+        itineraryRepository.save(existingItineraryItem);
     }
 
 }

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Card from 'react-bootstrap/Card';
 
 const AddTrip = () => {
 
@@ -38,10 +39,10 @@ const AddTrip = () => {
 
 
     return (
-        <div className="content-section">
-            <h1>Add Trip</h1>
-            <form>
-                <div className="form-group">
+        <Card>
+            <Card.Body>
+                <Card.Title>Add Trip</Card.Title>
+            <div className="form-group">
                     <label htmlFor="title">Trip Name</label>
                     <input type="text" id="title" name="title" value={tripData.title} onChange={handleChange} />
                 </div>
@@ -59,8 +60,9 @@ const AddTrip = () => {
                 </div>
               
                 <button type="button" onClick={addTrip}>Add Trip</button>
-            </form>
-        </div>
+            </Card.Body>
+        </Card>
+      
     )
 }
 

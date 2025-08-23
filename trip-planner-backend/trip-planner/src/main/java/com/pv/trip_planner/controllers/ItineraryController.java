@@ -1,6 +1,8 @@
 package com.pv.trip_planner.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +18,7 @@ import com.pv.trip_planner.entities.ItineraryItem;
 import com.pv.trip_planner.services.ItineraryService;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/itinerary")
 public class ItineraryController {
 
@@ -42,6 +45,16 @@ public class ItineraryController {
     @PostMapping("/{id}/activities")
     public void addActivityToItineraryItem(@PathVariable Long id, @RequestBody Activity activity) {
         itineraryService.addActivityToItineraryItem(id, activity);
+    }
+
+    @DeleteMapping("/{id}/activities/{activityId}")
+    public void deleteActivityFromItineraryItem(@PathVariable Long id, @PathVariable Long activityId) {
+        itineraryService.deleteActivityFromItineraryItem(id, activityId);
+    }
+
+    @PatchMapping("/{id}/activities/{activityId}")
+    public void updateActivityInItineraryItem(@PathVariable Long id, @PathVariable Long activityId, @RequestBody Activity activity) {
+        itineraryService.updateActivityInItineraryItem(id, activityId, activity);
     }
 
     // delete itinerary item

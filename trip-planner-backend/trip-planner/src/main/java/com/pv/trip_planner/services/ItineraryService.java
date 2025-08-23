@@ -46,4 +46,31 @@ public class ItineraryService {
         itineraryRepository.save(existingItineraryItem);
     }
 
+    public void deleteActivityFromItineraryItem(Long id, Long activityId) {
+        ItineraryItem existingItineraryItem = itineraryRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Itinerary item not found"));
+
+        existingItineraryItem.getActivities().removeIf(activity -> activity.getId().equals(activityId));
+
+        itineraryRepository.save(existingItineraryItem);
+    }
+
+    public void updateActivityInItineraryItem(Long id, Long activityId, Activity activity) {
+        ItineraryItem existingItineraryItem = itineraryRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Itinerary item not found"));
+
+        Activity existingActivity = existingItineraryItem.getActivities().stream()
+        .filter(a -> a.getId().equals(activityId))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("Activity not found"));
+
+        // existingActivity.setTitle(activity.getTitle());
+        existingActivity.setDescription(activity.getDescription());
+        // existingActivity.setStartTime(activity.getStartTime());
+        // existingActivity.setEndTime(activity.getEndTime());
+        // existingActivity.setLocation(activity.getLocation());
+
+        itineraryRepository.save(existingItineraryItem);
+    }
+
 }

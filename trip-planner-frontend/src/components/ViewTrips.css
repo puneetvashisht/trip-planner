@@ -1,0 +1,218 @@
+/* ViewTrips Component Styles */
+
+.view-trips-container {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+.trip-card {
+    transition: all 0.3s ease;
+    border-radius: 15px;
+    overflow: hidden;
+    background: white;
+}
+
+.trip-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+}
+
+.trip-card .card-body {
+    position: relative;
+}
+
+.trip-card .badge {
+    font-weight: 600;
+    font-size: 0.8rem;
+    border-radius: 20px;
+}
+
+.trip-card .btn-outline-primary {
+    border-radius: 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.trip-card .btn-outline-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(0, 123, 255, 0.3);
+}
+
+.trip-card .card-title {
+    font-weight: 600;
+    color: #2c3e50;
+    transition: color 0.3s ease;
+}
+
+.trip-card .card-title:hover {
+    color: #007bff;
+}
+
+.trip-card .card-text {
+    line-height: 1.6;
+    color: #6c757d;
+}
+
+.trip-details {
+    border-top: 1px solid #e9ecef;
+    padding-top: 1rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.detail-item i {
+    width: 16px;
+    color: #007bff;
+}
+
+.empty-state-card {
+    background: white;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.empty-state-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+.empty-state-icon {
+    opacity: 0.6;
+}
+
+.empty-state-card h3 {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.empty-state-card p {
+    color: #adb5bd;
+    font-size: 1.1rem;
+}
+
+.page-header {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.page-header h2 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.page-header p {
+    color: #6c757d;
+    font-size: 1.1rem;
+    margin-bottom: 0;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border: none;
+    border-radius: 25px;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+}
+
+.alert {
+    border-radius: 15px;
+    border: none;
+    font-weight: 500;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+}
+
+.spinner-border {
+    color: #007bff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .view-trips-container {
+        padding: 1rem 0;
+    }
+    
+    .page-header {
+        padding: 1.5rem;
+        text-align: center;
+    }
+    
+    .page-header .d-flex {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .trip-card {
+        margin-bottom: 1rem;
+    }
+    
+    .btn-primary {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Animation for cards */
+.trip-card {
+    animation: fadeInUp 0.6s ease forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.trip-card:nth-child(1) { animation-delay: 0.1s; }
+.trip-card:nth-child(2) { animation-delay: 0.2s; }
+.trip-card:nth-child(3) { animation-delay: 0.3s; }
+.trip-card:nth-child(4) { animation-delay: 0.4s; }
+.trip-card:nth-child(5) { animation-delay: 0.5s; }
+.trip-card:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading state styling */
+.spinner-container {
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Error state styling */
+.error-container {
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Empty state styling */
+.empty-state-container {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

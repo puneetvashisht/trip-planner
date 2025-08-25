@@ -28,41 +28,45 @@ class AuthService {
     return data;
   }
 
-  // User registration
-  async register(userData) {
+  // Helper method to handle network errors
+  async handleRequest(url, options) {
     try {
-      const response = await fetch(`${this.baseURL}${AUTH_ENDPOINTS.REGISTER}`, {
-        method: 'POST',
-        headers: getDefaultHeaders(),
-        body: JSON.stringify({
-          username: userData.username,
-          email: userData.email,
-          password: userData.password
-        })
-      });
-
+      const response = await fetch(url, options);
       return await this.handleResponse(response);
     } catch (error) {
-      throw new Error(`Registration failed: ${error.message}`);
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('Network error: Unable to connect to server. Please check if the backend is running and CORS is configured.');
+      }
+      if (error.message.includes('CORS')) {
+        throw new Error('CORS error: Backend server needs CORS configuration to allow requests from this origin.');
+      }
+      throw error;
     }
+  }
+
+  // User registration
+  async register(userData) {
+    return await this.handleRequest(`${this.baseURL}${AUTH_ENDPOINTS.REGISTER}`, {
+      method: 'POST',
+      headers: getDefaultHeaders(),
+      body: JSON.stringify({
+        username: userData.username,
+        email: userData.email,
+        password: userData.password
+      })
+    });
   }
 
   // User login
   async login(credentials) {
-    try {
-      const response = await fetch(`${this.baseURL}${AUTH_ENDPOINTS.LOGIN}`, {
-        method: 'POST',
-        headers: getDefaultHeaders(),
-        body: JSON.stringify({
-          username: credentials.username,
-          password: credentials.password
-        })
-      });
-
-      return await this.handleResponse(response);
-    } catch (error) {
-      throw new Error(`Login failed: ${error.message}`);
-    }
+    return await this.handleRequest(`${this.baseURL}${AUTH_ENDPOINTS.LOGIN}`, {
+      method: 'POST',
+      headers: getDefaultHeaders(),
+      body: JSON.stringify({
+        username: credentials.username,
+        password: credentials.password
+      })
+    });
   }
 
   // User logout
@@ -105,33 +109,21 @@ class AuthService {
 
   // Get user profile
   async getProfile(token) {
-    try {
-      const response = await fetch(`${this.baseURL}${AUTH_ENDPOINTS.PROFILE}`, {
-        method: 'GET',
-        headers: getAuthHeaders(token)
-      });
-
-      return await this.handleResponse(response);
-    } catch (error) {
-      throw new Error(`Failed to fetch profile: ${error.message}`);
-    }
+    return await this.handleRequest(`${this.baseURL}${AUTH_ENDPOINTS.PROFILE}`, {
+      method: 'GET',
+      headers: getAuthHeaders(token)
+    });
   }
 
   // Refresh access token
   async refreshToken(refreshToken) {
-    try {
-      const response = await fetch(`${this.baseURL}${AUTH_ENDPOINTS.REFRESH}`, {
-        method: 'POST',
-        headers: getDefaultHeaders(),
-        body: JSON.stringify({
-          refreshToken: refreshToken
-        })
-      });
-
-      return await this.handleResponse(response);
-    } catch (error) {
-      throw new Error(`Token refresh failed: ${error.message}`);
-    }
+    return await this.handleRequest(`${this.baseURL}${AUTH_ENDPOINTS.REFRESH}`, {
+      method: 'POST',
+      headers: getDefaultHeaders(),
+      body: JSON.stringify({
+        refreshToken: refreshToken
+      })
+    });
   }
 }
 

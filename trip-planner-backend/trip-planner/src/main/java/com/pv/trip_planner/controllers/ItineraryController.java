@@ -58,4 +58,9 @@ public class ItineraryController {
     }
 
     // delete itinerary item
+    @DeleteMapping("/{id}")
+    public void deleteItineraryItem(@PathVariable Long id) {
+        // itineraryService.deleteItineraryItem(id);
+    }
+
 }

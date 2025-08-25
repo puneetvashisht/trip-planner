@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS Test - Trip Planner API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CORS Test - Trip Planner API</h1>
+        <p>Use this page to test CORS and authentication with your Trip Planner API.</p>
+        
+        <div class="form-group">
+            <label for="baseUrl">API Base URL:</label>
+            <input type="text" id="baseUrl" value="http://localhost:9090" placeholder="http://localhost:9090">
+        </div>
+        
+        <div class="form-group">
+            <label for="jwtToken">JWT Token:</label>
+            <textarea id="jwtToken" rows="3" placeholder="Paste your JWT token here (without 'Bearer ' prefix)"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="username">Username for Token Generation:</label>
+            <input type="text" id="username" placeholder="Enter username to generate JWT token">
+        </div>
+        
+        <div class="button-group">
+            <button onclick="generateToken()">Generate JWT Token</button>
+            <button onclick="testCorsBasic()">Test CORS (Basic)</button>
+            <button onclick="testAuth()">Test Authentication</button>
+            <button onclick="testMyTrips()">Test /my-trips Endpoint</button>
+            <button onclick="testDashboard()">Test Dashboard Endpoint</button>
+            <button onclick="clearResults()">Clear Results</button>
+        </div>
+        
+        <div id="result" class="result info">Ready to test. Click a button above to start.</div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const result = document.getElementById('result');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}\n\n`;
+            
+            if (type === 'error') {
+                result.className = 'result error';
+            } else if (type === 'success') {
+                result.className = 'result success';
+            } else {
+                result.className = 'result info';
+            }
+            
+            result.textContent = logEntry;
+        }
+
+        function clearResults() {
+            document.getElementById('result').textContent = 'Results cleared.';
+            document.getElementById('result').className = 'result info';
+        }
+
+        async function makeRequest(url, options = {}) {
+            try {
+                const response = await fetch(url, options);
+                const data = await response.text();
+                
+                return {
+                    ok: response.ok,
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: Object.fromEntries(response.headers.entries()),
+                    data: data
+                };
+            } catch (error) {
+                return {
+                    ok: false,
+                    error: error.message,
+                    type: 'network'
+                };
+            }
+        }
+
+        async function generateToken() {
+            const username = document.getElementById('username').value;
+            if (!username) {
+                log('Please enter a username', 'error');
+                return;
+            }
+
+            const baseUrl = document.getElementById('baseUrl').value;
+            log(`Generating JWT token for username: ${username}...`);
+
+            try {
+                const result = await makeRequest(`${baseUrl}/api/test/jwt-token/${username}`);
+                
+                if (result.ok) {
+                    const tokenData = JSON.parse(result.data);
+                    if (tokenData.status === 'success') {
+                        document.getElementById('jwtToken').value = tokenData.token;
+                        log(`✅ JWT token generated successfully!\nUser ID: ${tokenData.tokenInfo.userId}\nUsername: ${tokenData.tokenInfo.username}`, 'success');
+                    } else {
+                        log(`❌ Token generation failed: ${tokenData.message}`, 'error');
+                    }
+                } else {
+                    log(`❌ HTTP ${result.status}: ${result.statusText}\nResponse: ${result.data}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Error parsing response: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCorsBasic() {
+            const baseUrl = document.getElementById('baseUrl').value;
+            log('Testing basic CORS configuration...');
+
+            try {
+                const result = await makeRequest(`${baseUrl}/api/test/cors-test`);
+                
+                if (result.ok) {
+                    const data = JSON.parse(result.data);
+                    log(`✅ CORS test successful!\nResponse: ${JSON.stringify(data, null, 2)}`, 'success');
+                } else {
+                    log(`❌ CORS test failed: HTTP ${result.status}\nResponse: ${result.data}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ CORS test error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAuth() {
+            const baseUrl = document.getElementById('baseUrl').value;
+            const token = document.getElementById('jwtToken').value;
+            
+            if (!token) {
+                log('Please generate or enter a JWT token first', 'error');
+                return;
+            }
+
+            log('Testing authentication with JWT token...');
+
+            try {
+                const result = await makeRequest(`${baseUrl}/api/test/test-auth`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (result.ok) {
+                    const data = JSON.parse(result.data);
+                    log(`✅ Authentication successful!\nUser: ${data.authenticatedUser}\nUser ID: ${data.userId || 'N/A'}\nType: ${data.userDetails}`, 'success');
+                } else {
+                    log(`❌ Authentication failed: HTTP ${result.status}\nResponse: ${result.data}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Authentication test error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testMyTrips() {
+            const baseUrl = document.getElementById('baseUrl').value;
+            const token = document.getElementById('jwtToken').value;
+            
+            if (!token) {
+                log('Please generate or enter a JWT token first', 'error');
+                return;
+            }
+
+            log('Testing /my-trips endpoint (the problematic one)...');
+
+            try {
+                const result = await makeRequest(`${baseUrl}/api/trips/my-trips`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (result.ok) {
+                    const data = JSON.parse(result.data);
+                    log(`✅ /my-trips endpoint working!\nFound ${data.length} trips`, 'success');
+                } else {
+                    log(`❌ /my-trips endpoint failed: HTTP ${result.status}\nResponse: ${result.data}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ /my-trips test error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testDashboard() {
+            const baseUrl = document.getElementById('baseUrl').value;
+            const token = document.getElementById('jwtToken').value;
+            
+            if (!token) {
+                log('Please generate or enter a JWT token first', 'error');
+                return;
+            }
+
+            log('Testing dashboard endpoint...');
+
+            try {
+                const result = await makeRequest(`${baseUrl}/api/trips/dashboard`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (result.ok) {
+                    const data = JSON.parse(result.data);
+                    log(`✅ Dashboard endpoint working!\nUser: ${data.user.username}\nTrips: ${data.trips.length}\nIs Admin: ${data.isAdmin}`, 'success');
+                } else {
+                    log(`❌ Dashboard endpoint failed: HTTP ${result.status}\nResponse: ${result.data}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Dashboard test error: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
+

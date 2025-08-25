@@ -5,6 +5,9 @@ export const ENV_CONFIG = {
   // Backend API URL - update this to match your backend
   API_BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:9090/api',
   
+  // Frontend URL for CORS
+  FRONTEND_URL: import.meta.env.VITE_FRONTEND_URL || 'http://localhost:5173',
+  
   // Environment
   NODE_ENV: import.meta.env.MODE || 'development',
   

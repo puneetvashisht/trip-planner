@@ -1,0 +1,352 @@
+/* Itinerary Component Styles */
+
+.itinerary-card {
+    transition: all 0.3s ease;
+    border-radius: 15px;
+    background: white;
+    border: 1px solid #e9ecef;
+}
+
+.itinerary-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.itinerary-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-bottom: 2px solid #dee2e6;
+    padding: 1.5rem;
+}
+
+.itinerary-header .card-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.itinerary-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.itinerary-meta .badge {
+    font-weight: 600;
+    font-size: 0.8rem;
+    border-radius: 20px;
+    padding: 0.5rem 0.75rem;
+}
+
+.date-range {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.date-range .fw-bold {
+    color: #495057;
+}
+
+.badge.bg-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important;
+    color: white;
+}
+
+.badge.bg-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%) !important;
+    color: white;
+}
+
+.add-activity-btn {
+    border-radius: 25px;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+.add-activity-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.delete-itinerary-btn {
+    border-radius: 25px;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+.delete-itinerary-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+.itinerary-description {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem;
+    border-left: 4px solid #007bff;
+}
+
+.itinerary-description p {
+    color: #6c757d;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.add-activity-form {
+    animation: slideDown 0.3s ease-out;
+}
+
+.add-activity-form .card {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.add-activity-form .card-header {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border: none;
+    padding: 1rem;
+}
+
+.add-activity-form .card-header h6 {
+    font-weight: 600;
+    margin: 0;
+}
+
+.add-activity-form .card-body {
+    padding: 1.5rem;
+}
+
+.add-activity-form .form-label {
+    color: #495057;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.add-activity-form .form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.add-activity-form .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.add-activity-form .form-control::placeholder {
+    color: #adb5bd;
+    font-style: italic;
+}
+
+.add-activity-form .btn {
+    border-radius: 25px;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.add-activity-form .btn-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    border: none;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.add-activity-form .btn-success:hover {
+    background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.add-activity-form .btn-outline-secondary {
+    border-color: #6c757d;
+    color: #6c757d;
+}
+
+.add-activity-form .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.add-activity-form .btn:disabled {
+    transform: none;
+    box-shadow: none;
+}
+
+.activities-list {
+    margin-top: 1rem;
+}
+
+.activities-list .text-center {
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 2px dashed #dee2e6;
+}
+
+.activities-list .text-center p {
+    color: #6c757d;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.activities-list .text-center small {
+    color: #adb5bd;
+    font-size: 0.875rem;
+}
+
+.activities-list .opacity-50 {
+    opacity: 0.5;
+}
+
+/* Alert styling */
+.alert {
+    border-radius: 10px;
+    border: none;
+    font-weight: 500;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    color: #856404;
+}
+
+/* Spinner styling */
+.spinner-border-sm {
+    width: 0.875rem;
+    height: 0.875rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .itinerary-header {
+        padding: 1rem;
+    }
+    
+    .itinerary-header .d-flex {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch !important;
+    }
+    
+    .add-activity-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .itinerary-meta {
+        justify-content: center;
+    }
+    
+    .add-activity-form .card-body {
+        padding: 1rem;
+    }
+    
+    .add-activity-form .d-flex {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .add-activity-form .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .itinerary-card .card-body {
+        padding: 1rem;
+    }
+    
+    .itinerary-description {
+        padding: 0.75rem;
+    }
+    
+    .add-activity-form .form-control {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+}
+
+/* Animation for add activity form */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hover effects for interactive elements */
+.itinerary-card:hover .add-activity-btn {
+    opacity: 1;
+}
+
+.add-activity-btn {
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
+}
+
+/* Focus states for accessibility */
+.add-activity-form .btn:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+/* Loading state enhancement */
+.btn:disabled .spinner-border-sm {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Empty state styling */
+.activities-list .text-center {
+    transition: all 0.3s ease;
+}
+
+.activities-list .text-center:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+}
+
+/* Form validation visual feedback */
+.form-control.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.form-control.is-valid {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}

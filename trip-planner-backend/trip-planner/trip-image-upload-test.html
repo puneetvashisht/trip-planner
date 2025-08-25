@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Image Upload Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .preview {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .preview img {
+            max-width: 300px;
+            max-height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Create Trip with Image</h1>
+    
+    <form id="tripForm" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">Trip Title:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="3" required></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" name="startDate" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="endDate">End Date:</label>
+            <input type="date" id="endDate" name="endDate" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="image">Trip Image:</label>
+            <input type="file" id="image" name="image" accept="image/*">
+        </div>
+        
+        <button type="submit">Create Trip</button>
+    </form>
+    
+    <div class="preview" id="preview" style="display: none;">
+        <h3>Image Preview:</h3>
+        <img id="previewImg" src="" alt="Preview">
+    </div>
+    
+    <div id="result"></div>
+
+    <div style="margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 5px;">
+        <h3>Public Image Access Test</h3>
+        <p>Once you've uploaded an image, you can test the public access to images:</p>
+        <div class="form-group">
+            <label for="imageFilename">Image Filename:</label>
+            <input type="text" id="imageFilename" placeholder="Enter the filename from upload result">
+            <button type="button" onclick="testPublicImageAccess()" style="margin-top: 10px;">Test Public Access</button>
+        </div>
+        <div id="publicAccessResult"></div>
+    </div>
+
+    <script>
+        // Image preview
+        document.getElementById('image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('preview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Form submission
+        document.getElementById('tripForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('title', document.getElementById('title').value);
+            formData.append('description', document.getElementById('description').value);
+            formData.append('startDate', document.getElementById('startDate').value);
+            formData.append('endDate', document.getElementById('endDate').value);
+            
+            const imageFile = document.getElementById('image').files[0];
+            if (imageFile) {
+                formData.append('image', imageFile);
+            }
+            
+            try {
+                const response = await fetch('http://localhost:9090/api/trips/create-with-image', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    document.getElementById('result').innerHTML = '<p style="color: green;">Trip created successfully!</p>';
+                    document.getElementById('tripForm').reset();
+                    document.getElementById('preview').style.display = 'none';
+                } else {
+                    const errorText = await response.text();
+                    document.getElementById('result').innerHTML = `<p style="color: red;">Error: ${errorText}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        });
+
+        // Test public image access
+        function testPublicImageAccess() {
+            const filename = document.getElementById('imageFilename').value;
+            if (!filename) {
+                document.getElementById('publicAccessResult').innerHTML = '<p style="color: red;">Please enter a filename</p>';
+                return;
+            }
+
+            // Test accessing the image without any authentication headers
+            fetch(`http://localhost:9090/api/trips/images/${filename}`)
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('publicAccessResult').innerHTML = 
+                            `<p style="color: green;">✅ Public access successful! Image is accessible without authentication.</p>
+                             <p>Image URL: <a href="http://localhost:9090/api/trips/images/${filename}" target="_blank">View Image</a></p>`;
+                    } else {
+                        document.getElementById('publicAccessResult').innerHTML = 
+                            `<p style="color: red;">❌ Public access failed. Status: ${response.status}</p>`;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('publicAccessResult').innerHTML = 
+                        `<p style="color: red;">❌ Error testing public access: ${error.message}</p>`;
+                });
+        }
+    </script>
+</body>
+</html>

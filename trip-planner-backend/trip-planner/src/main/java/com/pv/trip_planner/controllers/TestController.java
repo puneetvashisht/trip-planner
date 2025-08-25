@@ -1,7 +1,11 @@
 package com.pv.trip_planner.controllers;
 
 import com.pv.trip_planner.entities.Role;
+import com.pv.trip_planner.entities.User;
 import com.pv.trip_planner.repositories.RoleRepository;
+import com.pv.trip_planner.repositories.UserRepository;
+import com.pv.trip_planner.security.CustomUserDetails;
+import com.pv.trip_planner.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +22,12 @@ public class TestController {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @GetMapping("/public")
     public Map<String, String> publicEndpoint() {
@@ -77,6 +87,84 @@ public class TestController {
             response.put("status", "error");
             response.put("message", "Error retrieving roles: " + e.getMessage());
         }
+        return response;
+    }
+
+    @GetMapping("/jwt-token/{username}")
+    public Map<String, Object> generateJwtToken(@PathVariable String username) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found: " + username));
+            
+            CustomUserDetails userDetails = new CustomUserDetails(user);
+            String token = jwtTokenUtil.generateToken(userDetails);
+            String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
+            
+            // Extract claims to verify user ID is included
+            Long userId = jwtTokenUtil.extractUserId(token);
+            String extractedUsername = jwtTokenUtil.extractUsername(token);
+            
+            response.put("status", "success");
+            response.put("message", "JWT token generated successfully");
+            response.put("token", token);
+            response.put("refreshToken", refreshToken);
+            response.put("user", Map.of(
+                "id", user.getId(),
+                "username", user.getUsername(),
+                "email", user.getEmail(),
+                "roles", user.getRoles().stream().map(Role::getName).toList()
+            ));
+            response.put("tokenInfo", Map.of(
+                "userId", userId,
+                "username", extractedUsername,
+                "expiresIn", "24 hours"
+            ));
+            
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", "Error generating JWT token: " + e.getMessage());
+        }
+        return response;
+    }
+
+    @GetMapping("/test-auth")
+    public Map<String, Object> testAuthentication() {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            
+            if (authentication != null && authentication.isAuthenticated()) {
+                response.put("status", "success");
+                response.put("message", "Authentication successful");
+                response.put("authenticatedUser", authentication.getName());
+                response.put("authorities", authentication.getAuthorities());
+                
+                if (authentication.getPrincipal() instanceof CustomUserDetails) {
+                    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+                    response.put("userId", userDetails.getUserId());
+                    response.put("userDetails", "CustomUserDetails");
+                } else {
+                    response.put("userDetails", "Standard UserDetails");
+                }
+            } else {
+                response.put("status", "error");
+                response.put("message", "Not authenticated");
+            }
+            
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", "Error testing authentication: " + e.getMessage());
+        }
+        return response;
+    }
+
+    @GetMapping("/cors-test")
+    public Map<String, Object> corsTest() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("message", "CORS test endpoint working");
+        response.put("timestamp", System.currentTimeMillis());
         return response;
     }
 }

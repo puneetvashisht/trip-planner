@@ -30,8 +30,8 @@ public class ItineraryService {
 
         existingItem.setTitle(itineraryItem.getTitle());
         existingItem.setDescription(itineraryItem.getDescription());
-        existingItem.setStartTime(itineraryItem.getStartTime());
-        existingItem.setEndTime(itineraryItem.getEndTime());
+        existingItem.setStartDate(itineraryItem.getStartDate());
+        existingItem.setEndDate(itineraryItem.getEndDate());
         existingItem.setLocation(itineraryItem.getLocation());
 
         itineraryRepository.save(existingItem);
@@ -71,6 +71,13 @@ public class ItineraryService {
         // existingActivity.setLocation(activity.getLocation());
 
         itineraryRepository.save(existingItineraryItem);
+    }
+
+    public void deleteTripItinerary(Long id) {
+        ItineraryItem existingItem = itineraryRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Itinerary item not found"));
+        
+        itineraryRepository.delete(existingItem);
     }
 
 }

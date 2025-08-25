@@ -32,25 +32,17 @@ public class JwtTokenUtil {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public Long extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", Long.class));
+    }
+
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
+        final Claims claims = getClaims(token);
         return claimsResolver.apply(claims);
-    }
-
-    private Claims extractAllClaims(String token) {
-        try {
-            return Jwts.parser()
-                    .verifyWith(getSigningKey())
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new RuntimeException("Invalid JWT token", e);
-        }
     }
 
     private Boolean isTokenExpired(String token) {
@@ -59,11 +51,23 @@ public class JwtTokenUtil {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        
+        // Add user ID to claims if it's our custom UserDetails
+        if (userDetails instanceof CustomUserDetails) {
+            claims.put("userId", ((CustomUserDetails) userDetails).getUserId());
+        }
+        
         return createToken(claims, userDetails.getUsername(), expiration);
     }
 
     public String generateRefreshToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        
+        // Add user ID to claims if it's our custom UserDetails
+        if (userDetails instanceof CustomUserDetails) {
+            claims.put("userId", ((CustomUserDetails) userDetails).getUserId());
+        }
+        
         return createToken(claims, userDetails.getUsername(), refreshExpiration);
     }
 
@@ -91,6 +95,20 @@ public class JwtTokenUtil {
             return !isTokenExpired(token);
         } catch (JwtException | IllegalArgumentException e) {
             return false;
+        }
+    }
+
+
+
+    public Claims getClaims(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new RuntimeException("Invalid JWT token", e);
         }
     }
 }

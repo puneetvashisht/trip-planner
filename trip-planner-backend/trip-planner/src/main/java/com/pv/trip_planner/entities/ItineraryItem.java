@@ -3,7 +3,7 @@ package com.pv.trip_planner.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 // import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,8 +22,8 @@ public class ItineraryItem {
 
     private String title;
     private String description;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String location;
     // @ManyToOne
     // @JoinColumn(name = "trip_id", nullable = false)

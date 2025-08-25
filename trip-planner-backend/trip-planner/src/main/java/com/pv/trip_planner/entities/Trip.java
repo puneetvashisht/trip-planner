@@ -23,6 +23,7 @@ public class Trip {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String imageUrl;
 
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)

@@ -5,11 +5,13 @@ export const getToken = () => {
 };
 
 export const setToken = (token) => {
-  Cookies.set('jwt_token', token, { expires: 1 }); // 1 day
+  // Cookies.set('jwt_token', token, { expires: 1 }); // 1 day
+  localStorage.setItem('token', token);
 };
 
 export const removeToken = () => {
-  Cookies.remove('jwt_token');
+  // Cookies.remove('jwt_token');
+  localStorage.removeItem('token');
 };
 
 export const isTokenValid = (token) => {
